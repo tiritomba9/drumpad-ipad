@@ -1,6 +1,6 @@
 // Service Worker: legt die App-Dateien im Zwischenspeicher ab, damit das Drumpad ohne Internet startet.
 // Nach Änderungen an der App die Versionsnummer erhöhen, damit der alte Zwischenspeicher verworfen wird.
-const CACHE = "drumpad-v4";
+const CACHE = "drumpad-v5";
 const ASSETS = [
   "./", "index.html", "style.css", "app.js", "audio.js", "db.js", "logic.js",
   "manifest.webmanifest", "icon-192.png", "icon-512.png", "apple-touch-icon.png",

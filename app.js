@@ -1,7 +1,7 @@
 // Oberfläche des Drumpads: Kacheln, zwei Templates, Belegung, Sound-Bibliothek, Konfigurationen und Einstellungen.
 import {
   BANKS, MODES, DEFAULT_MODE, LEGACY_COUNT, MAX_PADS, CODE_TO_PAD,
-  bestGrid, padId, padNumber, normalizeProfile, normalizeBanks, emptyBanks,
+  bestGrid, padId, padNumber, normalizeProfile, normalizeBanks, emptyBanks, emptyBank,
   buildFromNames, appendNames, appendTile, removeTile, trimEmpty, stem, formatSize, isAudioFile,
 } from "./logic.js";
 import * as db from "./db.js";
@@ -274,6 +274,8 @@ function updatePanel() {
   $("#mode").value = entry ? entry.modus : DEFAULT_MODE;
   for (const selector of ["#btn-pick", "#btn-import-assign", "#btn-remove-tile"]) $(selector).disabled = !id;
   for (const selector of ["#volume", "#mode", "#btn-test", "#btn-clear"]) $(selector).disabled = !entry;
+  $("#btn-trim").disabled = bankData().anzahl === 0;
+  $("#btn-clear-all").disabled = bankData().anzahl === 0;
 }
 
 async function saveBanks() {
@@ -321,6 +323,23 @@ async function removeSelectedTile() {
   buildPads();
   updatePanel();
   setStatus(`Kachel ${labelOf(id)} entfernt. Template ${state.bank} hat ${bankData().anzahl} Kacheln.`);
+}
+
+/** Entfernt alle Kacheln des sichtbaren Templates. Die Sounds in der Bibliothek und gespeicherte Konfigurationen bleiben. */
+async function clearAllTiles() {
+  const count = bankData().anzahl;
+  if (!count) {
+    setStatus(`Template ${state.bank} hat keine Kacheln.`);
+    return;
+  }
+  if (!confirm(`Alle ${count} Kacheln aus Template ${state.bank} entfernen? Die Sounds in der Bibliothek und gespeicherte Konfigurationen bleiben erhalten.`)) return;
+  engine.stopWhere(`${state.bank}/`);
+  state.banks[state.bank] = emptyBank();
+  state.selected = null;
+  await saveBanks();
+  buildPads();
+  updatePanel();
+  setStatus(`Alle ${count} Kacheln aus Template ${state.bank} entfernt.`);
 }
 
 async function trimEmptyTiles() {
@@ -386,6 +405,7 @@ function bindPanel() {
   $("#btn-add-tile").addEventListener("click", () => openLibrary("new"));
   $("#btn-remove-tile").addEventListener("click", removeSelectedTile);
   $("#btn-trim").addEventListener("click", trimEmptyTiles);
+  $("#btn-clear-all").addEventListener("click", clearAllTiles);
 }
 
 // ---------- Sound-Bibliothek ----------
@@ -896,7 +916,7 @@ async function init() {
   // Für Selbsttests im Browser.
   window.drumpad = {
     state, settings, engine, library, assign, importBlob, importAndReport, addTileWithSound, removeSelectedTile,
-    trimEmptyTiles, refreshLibrary, applyProfile, switchBank, eid, tasten, bankData, db,
+    trimEmptyTiles, clearAllTiles, refreshLibrary, applyProfile, switchBank, eid, tasten, bankData, db,
   };
 }
 
