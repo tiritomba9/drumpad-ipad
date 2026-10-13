@@ -16,20 +16,24 @@
 </head>
 <body>
 <header class="bar">
+  <div class="banks" role="group" aria-label="Template wählen">
+    <button id="bank-A" type="button" aria-pressed="true"><b>A</b><span>leer</span></button>
+    <button id="bank-B" type="button" aria-pressed="false"><b>B</b><span>leer</span></button>
+  </div>
   <button id="btn-edit" type="button" aria-pressed="false">Bearbeiten</button>
   <button id="btn-stop" type="button">Alle stoppen</button>
   <span id="status" role="status" aria-live="polite">Bereit.</span>
   <button id="btn-sounds" type="button">Sounds</button>
-  <button id="btn-profile" type="button">Konfigurationen</button>
+  <button id="btn-profile" type="button">Einstellungen</button>
 </header>
 
 <p id="hint" class="hint" hidden>Zum Installieren: Teilen-Symbol von Safari antippen, dann „Zum Home-Bildschirm“. Danach startet das Drumpad wie eine App, auch ohne Internet.</p>
 
 <main>
-  <section id="pad" class="pad" aria-label="Pads"></section>
+  <section id="pad" class="pad" aria-label="Kacheln"></section>
 
   <aside id="panel" class="panel" hidden>
-    <h2 id="panel-title">Taste wählen</h2>
+    <h2 id="panel-title">Kachel wählen</h2>
     <p id="panel-file" class="file">–</p>
     <div class="row">
       <button id="btn-pick" type="button">Aus Bibliothek wählen …</button>
@@ -67,19 +71,37 @@
 
 <dialog id="dlg-profile">
   <form method="dialog" class="dlg-head">
-    <h2>Konfigurationen</h2>
+    <h2>Einstellungen</h2>
     <button type="submit">Schließen</button>
   </form>
+  <h3>Konfigurationen</h3>
+  <p class="note">Die App hat zwei Templates, A und B, die gleichzeitig geladen sind. Oben in der Kopfleiste wechselst du mit einem Tipp. Hier lädst du gespeicherte Konfigurationen in ein Template oder speicherst das sichtbare Template.</p>
   <div class="row url">
-    <input id="profile-name" type="text" placeholder="Name der Konfiguration" aria-label="Name der Konfiguration" maxlength="60">
+    <input id="profile-name" type="text" placeholder="Name für das sichtbare Template" aria-label="Name der Konfiguration" maxlength="60">
     <button id="btn-profile-save" type="button">Speichern</button>
   </div>
   <ul id="profile-list" class="list"></ul>
   <div class="row">
     <button id="btn-profile-import" type="button">Aus Datei laden …</button>
-    <button id="btn-profile-export" type="button">Aktuelle Belegung exportieren</button>
+    <button id="btn-profile-export" type="button">Sichtbares Template exportieren</button>
   </div>
   <p class="note">Exportierte Dateien enthalten nur die Belegung, nicht die Sounds. Konfigurationen der Windows-Version lassen sich laden, die Sounds müssen dann in der Bibliothek liegen.</p>
+  <h3>Anzeige</h3>
+  <label class="field" for="pad-count">Anzahl der Kacheln</label>
+  <select id="pad-count"></select>
+  <label class="field" for="top-gap">Abstand oben, falls die Statusleiste von iPadOS Tasten verdeckt: <output id="top-gap-out">0</output> px</label>
+  <input id="top-gap" type="range" min="0" max="60" step="2" value="0">
+  <div class="row">
+    <button id="btn-top-auto" type="button">Automatisch</button>
+  </div>
+  <p class="note">Die Belegung der Kacheln bleibt erhalten, wenn du die Anzahl änderst. Kacheln, die nicht sichtbar sind, behalten ihren Sound.</p>
+  <h3>Audio</h3>
+  <label class="check"><input id="keep-alive" type="checkbox"> Audio dauerhaft bereit halten</label>
+  <p class="note">Verringert die Verzögerung beim ersten Antippen nach einer Pause. Spielt ein unhörbares Signal und braucht etwas mehr Akku. Wirkt ab dem ersten Antippen in der App.</p>
+  <div class="row">
+    <button id="btn-diag" type="button">Audio-Diagnose</button>
+  </div>
+  <pre id="diag" class="diag"></pre>
 </dialog>
 
 <script type="module" src="app.js"></script>
