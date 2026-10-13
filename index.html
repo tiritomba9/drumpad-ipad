@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Drumpad">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#151515">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="stylesheet" href="style.css">
+<title>Numpad-Drumpad</title>
+</head>
+<body>
+<header class="bar">
+  <button id="btn-edit" type="button" aria-pressed="false">Bearbeiten</button>
+  <button id="btn-stop" type="button">Alle stoppen</button>
+  <span id="status" role="status" aria-live="polite">Bereit.</span>
+  <button id="btn-sounds" type="button">Sounds</button>
+  <button id="btn-profile" type="button">Konfigurationen</button>
+</header>
+
+<p id="hint" class="hint" hidden>Zum Installieren: Teilen-Symbol von Safari antippen, dann „Zum Home-Bildschirm“. Danach startet das Drumpad wie eine App, auch ohne Internet.</p>
+
+<main>
+  <section id="pad" class="pad" aria-label="Pads"></section>
+
+  <aside id="panel" class="panel" hidden>
+    <h2 id="panel-title">Taste wählen</h2>
+    <p id="panel-file" class="file">–</p>
+    <div class="row">
+      <button id="btn-pick" type="button">Aus Bibliothek wählen …</button>
+      <button id="btn-import-assign" type="button">Datei importieren …</button>
+    </div>
+    <label for="volume">Lautstärke <output id="volume-out">100</output></label>
+    <input id="volume" type="range" min="0" max="100" value="100">
+    <label for="mode">Modus</label>
+    <select id="mode"></select>
+    <div class="row">
+      <button id="btn-test" type="button">Testen</button>
+      <button id="btn-clear" type="button">Belegung entfernen</button>
+    </div>
+  </aside>
+</main>
+
+<input id="file-in" type="file" accept="audio/*,.wav,.mp3,.m4a,.aac,.flac,.ogg" multiple hidden>
+<input id="json-in" type="file" accept="application/json,.json" hidden>
+
+<dialog id="dlg-sounds">
+  <form method="dialog" class="dlg-head">
+    <h2 id="sounds-title">Sound-Bibliothek</h2>
+    <button type="submit">Schließen</button>
+  </form>
+  <p class="note">Die Sounds liegen auf diesem Gerät und funktionieren ohne Internet. Dateien aus iCloud Drive oder anderen Cloud-Speichern wählst du über „Dateien importieren“.</p>
+  <div class="row">
+    <button id="btn-import" type="button">Dateien importieren …</button>
+  </div>
+  <div class="row url">
+    <input id="url-in" type="url" inputmode="url" placeholder="https://… direkter Link zu einer Audiodatei" aria-label="Adresse einer Audiodatei">
+    <button id="btn-url" type="button">Laden</button>
+  </div>
+  <ul id="lib-list" class="list"></ul>
+</dialog>
+
+<dialog id="dlg-profile">
+  <form method="dialog" class="dlg-head">
+    <h2>Konfigurationen</h2>
+    <button type="submit">Schließen</button>
+  </form>
+  <div class="row url">
+    <input id="profile-name" type="text" placeholder="Name der Konfiguration" aria-label="Name der Konfiguration" maxlength="60">
+    <button id="btn-profile-save" type="button">Speichern</button>
+  </div>
+  <ul id="profile-list" class="list"></ul>
+  <div class="row">
+    <button id="btn-profile-import" type="button">Aus Datei laden …</button>
+    <button id="btn-profile-export" type="button">Aktuelle Belegung exportieren</button>
+  </div>
+  <p class="note">Exportierte Dateien enthalten nur die Belegung, nicht die Sounds. Konfigurationen der Windows-Version lassen sich laden, die Sounds müssen dann in der Bibliothek liegen.</p>
+</dialog>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
