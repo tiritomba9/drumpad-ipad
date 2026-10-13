@@ -47,10 +47,17 @@
       <button id="btn-test" type="button">Testen</button>
       <button id="btn-clear" type="button">Belegung entfernen</button>
     </div>
+    <h3>Kacheln</h3>
+    <div class="row">
+      <button id="btn-add-tile" type="button">Kachel hinzufügen …</button>
+      <button id="btn-remove-tile" type="button">Kachel entfernen</button>
+      <button id="btn-trim" type="button">Leere am Ende entfernen</button>
+    </div>
   </aside>
 </main>
 
 <input id="file-in" type="file" accept="audio/*,.wav,.mp3,.m4a,.aac,.flac,.ogg" multiple hidden>
+<input id="dir-in" type="file" webkitdirectory multiple hidden>
 <input id="json-in" type="file" accept="application/json,.json" hidden>
 
 <dialog id="dlg-sounds">
@@ -58,7 +65,14 @@
     <h2 id="sounds-title">Sound-Bibliothek</h2>
     <button type="submit">Schließen</button>
   </form>
-  <p class="note">Die Sounds liegen auf diesem Gerät und funktionieren ohne Internet. Dateien aus iCloud Drive oder anderen Cloud-Speichern wählst du über „Dateien importieren“.</p>
+  <p class="note">Die Sounds liegen auf diesem Gerät und funktionieren ohne Internet. Dateien aus iCloud Drive oder anderen Cloud-Speichern wählst du über „Dateien importieren“ oder „Ordner importieren“.</p>
+  <div id="import-auto">
+    <label class="check"><input id="auto-belegen" type="checkbox"> Kacheln beim Import automatisch anlegen</label>
+    <p class="note">An: Ein importierter Ordner baut das sichtbare Template mit einer Kachel je Sound neu auf, die Anzahl der Kacheln ergibt sich aus dem Ordner. Importierte einzelne Dateien bekommen jeweils eine neue Kachel am Ende. Aus: Importierte Sounds landen nur in der Bibliothek, du belegst die Kacheln selbst.</p>
+    <div class="row">
+      <button id="btn-import-dir" type="button">Ordner importieren …</button>
+    </div>
+  </div>
   <div class="row">
     <button id="btn-import" type="button">Dateien importieren …</button>
   </div>
@@ -87,14 +101,12 @@
   </div>
   <p class="note">Exportierte Dateien enthalten nur die Belegung, nicht die Sounds. Konfigurationen der Windows-Version lassen sich laden, die Sounds müssen dann in der Bibliothek liegen.</p>
   <h3>Anzeige</h3>
-  <label class="field" for="pad-count">Anzahl der Kacheln</label>
-  <select id="pad-count"></select>
   <label class="field" for="top-gap">Abstand oben, falls die Statusleiste von iPadOS Tasten verdeckt: <output id="top-gap-out">0</output> px</label>
   <input id="top-gap" type="range" min="0" max="60" step="2" value="0">
   <div class="row">
     <button id="btn-top-auto" type="button">Automatisch</button>
   </div>
-  <p class="note">Die Belegung der Kacheln bleibt erhalten, wenn du die Anzahl änderst. Kacheln, die nicht sichtbar sind, behalten ihren Sound.</p>
+  <p class="note">Die Anzahl der Kacheln bestimmt der Inhalt eines Templates: Sie ergibt sich aus dem importierten Ordner, aus hinzugefügten Sounds und aus der geladenen Konfiguration. Kacheln hinzufügen und entfernen geht im Bearbeiten-Modus.</p>
   <h3>Audio</h3>
   <label class="check"><input id="keep-alive" type="checkbox"> Audio dauerhaft bereit halten</label>
   <p class="note">Verringert die Verzögerung beim ersten Antippen nach einer Pause. Spielt ein unhörbares Signal und braucht etwas mehr Akku. Wirkt ab dem ersten Antippen in der App.</p>
