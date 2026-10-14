@@ -1,7 +1,7 @@
 // Reine Logik ohne Browser-Schnittstellen: Kacheln, Raster, Modi, Templates und Prüfung von Konfigurationen.
 
 export const MAX_PADS = 200;
-export const BANKS = ["A", "B"];
+export const BANKS = ["A", "B", "C"];
 /** Kachelanzahl der ersten Fassung, wird nur noch zum Übernehmen alter Daten gebraucht. */
 export const LEGACY_COUNT = 24;
 
@@ -139,7 +139,7 @@ export function emptyBank() {
 }
 
 export function emptyBanks() {
-  return { aktiv: "A", A: emptyBank(), B: emptyBank() };
+  return { aktiv: "A", ...Object.fromEntries(BANKS.map((bank) => [bank, emptyBank()])) };
 }
 
 /**

@@ -1,4 +1,4 @@
-// Oberfläche des Drumpads: Kacheln, zwei Templates, Belegung, Sound-Bibliothek, Konfigurationen und Einstellungen.
+// Oberfläche des Drumpads: Kacheln, drei Templates, Belegung, Sound-Bibliothek, Konfigurationen und Einstellungen.
 import {
   BANKS, MODES, DEFAULT_MODE, LEGACY_COUNT, MAX_PADS, CODE_TO_PAD,
   bestGrid, padId, padNumber, normalizeProfile, normalizeBanks, emptyBanks, emptyBank,
@@ -11,8 +11,8 @@ const $ = (selector) => document.querySelector(selector);
 const PROFILE_PREFIX = "profil:";
 const GAP = 10;
 
-const { A: emptyA, B: emptyB } = emptyBanks();
-const state = { banks: { A: emptyA, B: emptyB }, bank: "A", selected: null, edit: false, pickFor: null };
+const { aktiv: _aktiv, ...emptyTemplates } = emptyBanks();
+const state = { banks: emptyTemplates, bank: "A", selected: null, edit: false, pickFor: null };
 const settings = { dauerbereit: true, autoBelegen: true, obenAbstand: null };
 const library = new Map(); // Dateiname -> Metadaten der gespeicherten Sounds
 const keyElements = new Map();
@@ -687,7 +687,7 @@ async function renderProfiles() {
     label.className = "nm";
     label.textContent = name;
     li.append(label);
-    for (const action of ["In A laden", "In B laden", "Exportieren", "Löschen"]) li.append(actionButton(action));
+    for (const action of [...BANKS.map((bank) => `In ${bank} laden`), "Exportieren", "Löschen"]) li.append(actionButton(action));
     list.append(li);
   }
 }
@@ -757,10 +757,11 @@ function bindProfiles() {
     const name = button.closest("li").dataset.name;
     const data = await db.getKV(PROFILE_PREFIX + name);
     const act = button.dataset.act;
-    if (act === "In A laden" || act === "In B laden") {
+    const target = /^In ([A-Z]) laden$/.exec(act)?.[1];
+    if (target && BANKS.includes(target)) {
       $("#dlg-profile").close();
       try {
-        await applyProfile(data, name, act === "In A laden" ? "A" : "B");
+        await applyProfile(data, name, target);
       } catch (error) {
         setStatus(error.message);
       }
@@ -871,7 +872,7 @@ async function loadState() {
     if (saved) {
       const banks = normalizeBanks(saved, legacyCount || LEGACY_COUNT);
       state.bank = banks.aktiv;
-      state.banks = { A: banks.A, B: banks.B };
+      state.banks = Object.fromEntries(BANKS.map((bank) => [bank, banks[bank]]));
     } else {
       // Erste Fassung: eine einzelne Belegung wird zu Template A.
       const legacy = await db.getKV("belegung");
